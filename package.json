@@ -1,0 +1,24 @@
+{
+  "name": "mf-backend",
+  "version": "1.0.0",
+  "description": "micro frontend backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Deep1Shikha/mf-backend.git"
+  },
+  "keywords": [
+    "backend",
+    "mongodb",
+    "mf"
+  ],
+  "author": "Deep1Shikha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Deep1Shikha/mf-backend/issues"
+  },
+  "homepage": "https://github.com/Deep1Shikha/mf-backend#readme"
+}
