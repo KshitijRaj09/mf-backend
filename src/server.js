@@ -36,13 +36,13 @@ async function connectMongoDB() {
          );
       });
    } catch (error) {
-      console.log(error);
+      console.log("error inside connectMongoDB", error);
    }
 }
-
-connectMongoDB();
 
 app.use("/userAuth", router.authUser);
 app.use("/follow", router.followUserRouter);
 app.use("/post", router.postRouter);
 app.use("/user", router.userRouters);
+
+connectMongoDB();
