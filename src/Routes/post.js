@@ -10,7 +10,7 @@ const Router = require("express");
 const {verifyAuthToken} = require("../middleware/verifyAuthToken");
 const router = Router();
 
-router.post("/", verifyAuthToken, createPost);
+router.post("/createPost", verifyAuthToken, createPost);
 router.put("/:id", verifyAuthToken, updatePost);
 router.delete("/:id", verifyAuthToken, deletePost);
 router.put("/:id/like", verifyAuthToken, likeDislikePost);
