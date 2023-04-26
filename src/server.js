@@ -12,10 +12,12 @@ dotenv.config();
 const PORT = process.env.PORT || 2001;
 
 const mongoURI = process.env.MONGOURI;
-
+const allowedOrigin = process.env.CORS_ORIGIN.split(",").map(
+   (origin) => origin
+);
 app.use(
    cors({
-      origin: "http://localhost:5000",
+      origin: allowedOrigin,
    })
 );
 
@@ -39,6 +41,10 @@ async function connectMongoDB() {
       console.log("error inside connectMongoDB", error);
    }
 }
+app.get("/welcome", (req, res) => {
+   console.log("process", process.env, allowedOrigin);
+   res.send("Welcome server is running");
+});
 
 app.use("/userAuth", router.authUser);
 app.use("/follow", router.followUserRouter);

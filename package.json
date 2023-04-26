@@ -2,10 +2,12 @@
    "name": "mf-backend",
    "version": "1.0.0",
    "description": "micro frontend backend",
-   "main": "index.js",
+   "main": "./src/server.js",
    "scripts": {
-      "start": "nodemon ./src/server.js",
-      "test": "echo \"Error: no test specified\" && exit 1"
+      "start": "node ./src/server.js",
+      "dev": "nodemon ./src/server.js",
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "build": "node ./src/server.js"
    },
    "repository": {
       "type": "git",
