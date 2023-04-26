@@ -76,10 +76,14 @@ const getPost = async (req, res) => {
 const getTimeLinePost = async (req, res) => {
    try {
       const currentUser = await User.findById(req.userid);
-      const userPosts = await Post.find({userId: req.userid});
+      const userPosts = await Post.find({userId: req.userid}).sort({
+         createdAt: -1,
+      });
       const friendPosts = await Promise.all(
          currentUser.followings.map((friendId) => {
-            return Post.find({userId: friendId});
+            return Post.find({userId: friendId}).sort({
+               createdAt: -1,
+            });
          })
       );
       res.json(userPosts.concat(...friendPosts));

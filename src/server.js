@@ -9,7 +9,7 @@ const cors = require("cors");
 
 dotenv.config();
 
-const PORT = 2000;
+const PORT = process.env.PORT || 2001;
 
 const mongoURI = process.env.MONGOURI;
 

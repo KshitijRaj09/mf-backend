@@ -5,7 +5,6 @@ const {check} = require("express-validator");
 
 //REGISTER
 const registerUser = async (req, res) => {
-   console.log("hello here", req.body);
    try {
       const {email, name, password, username} = req.body;
       const listOfUser = await User.find({});
@@ -33,7 +32,6 @@ const registerUser = async (req, res) => {
       const user = await newUser.save();
       res.status(200).json(user.username);
    } catch (err) {
-      console.log("error", err);
       res.status(500).json(err);
    }
 };
@@ -54,6 +52,7 @@ const loginUser = async (req, res) => {
          name: user.name,
          email: user.email,
          userid: user._id,
+         isAdmin: user.isAdmin,
       };
       const token = jwt.sign(userDetails, process.env.JWT_SECRET_KEY, {
          expiresIn: process.env.JWT_TOKEN_EXPIRES_IN,

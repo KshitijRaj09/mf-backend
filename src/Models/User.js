@@ -24,16 +24,16 @@ const UserSchema = new mongoose.Schema(
          min: 6,
          max: 15,
       },
-      profilePicture: {
+      avatar: {
          type: String,
          default: "",
       },
       followers: {
-         type: Array,
+         type: [{type: mongoose.Schema.ObjectId, ref: "User"}],
          default: [],
       },
       followings: {
-         type: Array,
+         type: [{type: mongoose.Schema.ObjectId, ref: "User"}],
          default: [],
       },
       isAdmin: {

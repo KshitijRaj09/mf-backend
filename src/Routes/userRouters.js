@@ -1,10 +1,16 @@
-const {updateUser, deleteUser, getUser} = require("../Controllers/user");
+const {
+   updateUser,
+   deleteUser,
+   getUser,
+   getAllUserList,
+} = require("../Controllers/user");
 const Router = require("express");
 const {verifyAuthToken} = require("../middleware/verifyAuthToken");
 const router = Router();
 
-router.put("/:id", verifyAuthToken, updateUser);
-router.delete("/:id", verifyAuthToken, deleteUser);
-router.get("/:id", verifyAuthToken, getUser);
+router.put("/:userid", verifyAuthToken, updateUser);
+router.delete("/:userid", verifyAuthToken, deleteUser);
+router.get("/:userid", verifyAuthToken, getUser);
+router.get("/all/allUsers", verifyAuthToken, getAllUserList);
 
 module.exports = router;

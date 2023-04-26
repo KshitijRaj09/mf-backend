@@ -10,6 +10,7 @@ const verifyAuthToken = async (req, res, next) => {
       const user = await jwt.verify(token, process.env.JWT_SECRET_KEY);
       req.userid = user.userid;
       req.username = user.username;
+      req.isAdmin = user.isAdmin;
       next();
    } catch (error) {
       return res.status(401).json({error: "Invalid access token"});

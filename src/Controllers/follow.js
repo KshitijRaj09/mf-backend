@@ -4,6 +4,7 @@ const User = require("../Models/User");
 const followUser = async (req, res) => {
    const currentUserId = req.userid;
    const userId = req.params.userid;
+
    if (currentUserId !== userId) {
       try {
          const user = await User.findById(userId);
@@ -26,8 +27,9 @@ const followUser = async (req, res) => {
 //unfollow a user
 const unfollowUser = async (req, res) => {
    const currentUserId = req.userid;
+
    const userId = req.params.userid;
-   if (req.body.userId !== req.id) {
+   if (currentUserId !== userId) {
       try {
          const user = await User.findById(userId);
          const currentUser = await User.findById(currentUserId);
@@ -46,7 +48,43 @@ const unfollowUser = async (req, res) => {
    }
 };
 
+const getRecommendedUserList = async (req, res) => {
+   try {
+      let users = await User.find({});
+      users = users
+         .map((user) => ({
+            userId: user._id.toString(),
+            avatar: user.avatar,
+            username: user.username,
+            userDescription: user.description,
+         }))
+         .filter((user) => req.userid !== user.userId);
+
+      let {followings: currentUserFollowings} = await User.findById(
+         req.userid
+      ).select({
+         followings: 1,
+         _id: 0,
+      });
+
+      currentUserFollowings = currentUserFollowings.map((user) =>
+         user.toString()
+      );
+
+      currentUserFollowings = new Set(currentUserFollowings);
+
+      users = users
+         .filter((user) => !currentUserFollowings.has(user.userId))
+         .slice(0, 5);
+
+      res.status(200).json(users);
+   } catch (err) {
+      res.status(500).json(err);
+   }
+};
+
 module.exports = {
    followUser,
    unfollowUser,
+   getRecommendedUserList,
 };
