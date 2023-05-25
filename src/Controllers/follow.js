@@ -1,4 +1,5 @@
 const User = require("../Models/User");
+const {filterDeletedUser} = require("../util");
 
 //follow a user
 const followUser = async (req, res) => {
@@ -77,9 +78,29 @@ const getRecommendedUserList = async (req, res) => {
          .filter((user) => !currentUserFollowings.has(user.userId))
          .slice(0, 5);
 
+      users = filterDeletedUser(users);
+
       res.status(200).json(users);
    } catch (err) {
       res.status(500).json(err);
+   }
+};
+
+const getFollowingUsersList = async (req, res) => {
+   try {
+      const userDetails = await User.findById(req.userid);
+
+      let followinguserDetails = await Promise.all(
+         userDetails.followings.map((followingsId) =>
+            User.findById(followingsId)
+         )
+      );
+
+      followinguserDetails = filterDeletedUser(followinguserDetails);
+
+      return res.status(200).json(followinguserDetails);
+   } catch (error) {
+      res.status(500).json(error);
    }
 };
 
@@ -87,4 +108,5 @@ module.exports = {
    followUser,
    unfollowUser,
    getRecommendedUserList,
+   getFollowingUsersList,
 };

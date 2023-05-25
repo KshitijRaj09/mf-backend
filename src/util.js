@@ -22,4 +22,22 @@ const checkIsUserFollowerHelper = async (inputModel, req) => {
    return {allusers, currentUserFollowings: new Set(currentUserFollowings)};
 };
 
-module.exports = {checkIsUserFollowerHelper};
+const checkIfValueExist = async (model, inputValue, property, userId) => {
+   try {
+      const isValueExist = await model.findOne({[property]: inputValue});
+      if (!isValueExist || isValueExist?._id.toString() === userId) {
+         return false;
+      }
+      return true;
+   } catch (error) {
+      console.log("error inside connectMongoDB", error);
+   }
+};
+
+const filterDeletedUser = (userList) => userList.filter((user) => user && user);
+
+module.exports = {
+   checkIsUserFollowerHelper,
+   checkIfValueExist,
+   filterDeletedUser,
+};
