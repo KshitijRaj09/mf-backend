@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const helmet = require("helmet");
 const morgan = require("morgan");
-const router = require("./Routes/index");
+const router = require("./src/Routes/index");
 const cors = require("cors");
 
 dotenv.config();
@@ -42,7 +42,6 @@ async function connectMongoDB() {
    }
 }
 app.get("/welcome", (req, res) => {
-   console.log("process", process.env, allowedOrigin);
    res.send("Welcome server is running");
 });
 
