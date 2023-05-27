@@ -40,13 +40,13 @@ const registerUser = async (req, res) => {
 const loginUser = async (req, res) => {
    try {
       const user = await User.findOne({email: req.body.email});
-      if (!user) return res.status(404).json("user not found");
+      if (!user) return res.status(404).json("User not found");
 
       const validPassword = await bcrypt.compare(
          req.body.password,
          user.password
       );
-      if (!validPassword) return res.status(400).json("wrong password");
+      if (!validPassword) return res.status(400).json("Incorrect password");
       const userDetails = {
          username: user.username,
          name: user.name,

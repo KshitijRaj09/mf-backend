@@ -1,28 +1,49 @@
 const User = require("../Models/User");
 const bcrypt = require("bcrypt");
-const {checkIsUserFollowerHelper} = require("../util");
+const {
+   checkIsUserFollowerHelper,
+   checkIfValueExist,
+   filterDeletedUser,
+} = require("../util");
 
 //update user
 const updateUser = async (req, res) => {
-   if (req.userid === req.params.userid || req.body.isAdmin) {
-      if (req.body.password) {
-         try {
-            const salt = await bcrypt.genSalt(10);
-            req.body.password = await bcrypt.hash(req.body.password, salt);
-         } catch (err) {
-            return res.status(500).json(err);
-         }
-      }
+   const {password, username, email} = req.body;
+   if (password) {
       try {
-         const user = await User.findByIdAndUpdate(req.params.userid, {
-            $set: req.body,
-         });
-         res.status(200).json("Account has been updated");
+         const salt = await bcrypt.genSalt(10);
+         req.body.password = await bcrypt.hash(req.body.password, salt);
       } catch (err) {
          return res.status(500).json(err);
       }
-   } else {
-      return res.status(403).json("You can update only your account!");
+   }
+   try {
+      const isUserNameExist = await checkIfValueExist(
+         User,
+         username,
+         "username",
+         req.userid
+      );
+      if (isUserNameExist) {
+         return res.status(500).json("Updated username already exists");
+      }
+      const isEmailExist = await checkIfValueExist(
+         User,
+         email,
+         "email",
+         req.userid
+      );
+
+      if (isEmailExist) {
+         return res.status(500).json("Updated email already exists");
+      }
+      const user = await User.findByIdAndUpdate(req.userid, {
+         $set: req.body,
+      });
+      console.log({user});
+      res.status(200).json("Account has been updated");
+   } catch (err) {
+      return res.status(500).json(err);
    }
 };
 
@@ -44,7 +65,8 @@ const deleteUser = async (req, res) => {
 //get a user
 const getUser = async (req, res) => {
    try {
-      const user = await User.findById(req.params.userid);
+      console.log("req");
+      const user = await User.findById(req.userid);
       const {password, updatedAt, ...other} = user._doc;
       res.status(200).json(other);
    } catch (err) {
@@ -69,6 +91,7 @@ const getAllUserList = async (req, res) => {
       follow: boolean, username, description, avatar, userId
       */
 
+      allusers = filterDeletedUser(allusers);
       res.status(200).json(allusers);
    } catch (err) {
       res.status(500).json(err);

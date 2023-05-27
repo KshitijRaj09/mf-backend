@@ -8,9 +8,9 @@ const Router = require("express");
 const {verifyAuthToken} = require("../middleware/verifyAuthToken");
 const router = Router();
 
-router.put("/:userid", verifyAuthToken, updateUser);
+router.put("/update", verifyAuthToken, updateUser);
 router.delete("/:userid", verifyAuthToken, deleteUser);
-router.get("/:userid", verifyAuthToken, getUser);
+router.get("/getUserDetails", verifyAuthToken, getUser);
 router.get("/all/allUsers", verifyAuthToken, getAllUserList);
 
 module.exports = router;
