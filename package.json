@@ -35,8 +35,5 @@
       "mongoose": "^7.0.3",
       "morgan": "^1.10.0",
       "nodemon": "^2.0.22"
-   },
-   "engines": {
-      "node": "19.8.1"
    }
 }
