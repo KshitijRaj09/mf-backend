@@ -13,12 +13,12 @@ const PORT = process.env.PORT || 2001;
 
 const mongoURI = process.env.MONGOURI;
 const allowedOrigin = process.env.CORS_ORIGIN.split(",").map(
-   (origin) => origin
+  (origin) => origin
 );
 app.use(
-   cors({
-      origin: allowedOrigin,
-   })
+  cors({
+    origin: allowedOrigin,
+  })
 );
 
 app.use(express.json());
@@ -26,23 +26,24 @@ app.use(helmet());
 app.use(morgan("short"));
 
 async function connectMongoDB() {
-   try {
-      const {connections} = await mongoose.connect(mongoURI, {
-         useNewUrlParser: true,
-         useUnifiedTopology: true,
-      });
+  try {
+    const {connections} = await mongoose.connect(mongoURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
 
-      app.listen(PORT, () => {
-         console.log(
-            `Server listening @ PORT ${PORT} && MongoDB running @ PORT ${connections[0].port})`
-         );
-      });
-   } catch (error) {
-      console.log("error inside connectMongoDB", error);
-   }
+    app.listen(PORT, () => {
+      console.log(
+        `Server listening @ PORT ${PORT} && MongoDB running @ PORT ${connections[0].port})`
+      );
+    });
+  } catch (error) {
+    console.log("error inside connectMongoDB", error);
+  }
 }
 app.get("/welcome", (req, res) => {
-   res.send("Welcome server is running");
+  console.log("allowed origin", allowedOrigin);
+  res.send("Welcome server is running");
 });
 
 app.use("/userAuth", router.authUser);
