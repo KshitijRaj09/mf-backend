@@ -8,12 +8,22 @@ const registerUser = async (req, res) => {
    try {
       const {email, name, password, username} = req.body;
       const listOfUser = await User.find({});
-      const existingUser = listOfUser.find(
-         (user) => user.email === email || user.username === username
+      let existingUser = listOfUser.find(
+         (user) => user.email === email
       );
       if (existingUser) {
          return res.status(409).json({
-            errormessage: `email: ${existingUser.email} or username: ${existingUser.username} already exists`,
+            errormessage: `email: ${existingUser.email} already exists`,
+         });
+      }
+
+      existingUser = listOfUser.find(
+         (user) => user.username === username
+      );
+
+      if (existingUser) {
+         return res.status(409).json({
+            errormessage: `username: ${existingUser.username} already exists`,
          });
       }
       //generate new password
