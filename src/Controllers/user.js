@@ -7,9 +7,9 @@ const {
   updateJWTToken,
 } = require("../util");
 
-//update user
+//update an user
 const updateUser = async (req, res) => {
-  const {password, username, email} = req.body;
+  const { password, username, email } = req.body;
   const bearerToken = req.headers["authorization"].split(" ")[1];
   if (password) {
     try {
@@ -47,13 +47,13 @@ const updateUser = async (req, res) => {
     const JWTToken = updateJWTToken(bearerToken, user);
     res
       .status(200)
-      .json({token: JWTToken, message: "Account has been updated"});
+      .json({ token: JWTToken, message: "Account has been updated" });
   } catch (err) {
     return res.status(500).json(err);
   }
 };
 
-//delete user
+//delete an user
 const deleteUser = async (req, res) => {
   console.log(req.isAdmin);
   if (req.body.userId === req.params.userid || req.isAdmin) {
@@ -68,21 +68,21 @@ const deleteUser = async (req, res) => {
   }
 };
 
-//get a user
+//get an user
 const getUser = async (req, res) => {
   try {
-    console.log("req");
     const user = await User.findById(req.userid);
-    const {password, updatedAt, ...other} = user._doc;
+    const { password, updatedAt, ...other } = user._doc;
     res.status(200).json(other);
   } catch (err) {
     res.status(500).json(err);
   }
 };
 
+//Get all userList
 const getAllUserList = async (req, res) => {
   try {
-    let {allusers, currentUserFollowings} = await checkIsUserFollowerHelper(
+    let { allusers, currentUserFollowings } = await checkIsUserFollowerHelper(
       User,
       req
     );
@@ -90,8 +90,8 @@ const getAllUserList = async (req, res) => {
 
     allusers = allusers.map((user) =>
       currentUserFollowings.has(user.userId)
-        ? {...user, isFollowing: true}
-        : {...user, isFollowing: false}
+        ? { ...user, isFollowing: true }
+        : { ...user, isFollowing: false }
     );
     /*
       follow: boolean, username, description, avatar, userId
@@ -104,9 +104,31 @@ const getAllUserList = async (req, res) => {
   }
 };
 
+//Get by User by search
+const getUserBySearch = async (req, res) => {
+  console.log(req.query);
+  const keyword = req.query.search;
+  if (!keyword) {
+    res.status(200).json([]);
+  }
+  try {
+    const userList = await User.find({
+      $or: [{ name: { $regex: keyword, $options: 'i' } },
+      { username: { $regex: keyword, $options: 'i' } }]
+    }).where('_id').ne(req.userid).select('username name avatar profilePicture _id')
+    console.log(userList);
+    return res.status(200).json(userList);
+  }
+  catch (error) {
+    res.status(500).json(error);
+  }
+
+};
+
 module.exports = {
   updateUser,
   deleteUser,
   getUser,
   getAllUserList,
+  getUserBySearch
 };

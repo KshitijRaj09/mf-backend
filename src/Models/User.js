@@ -28,14 +28,14 @@ const UserSchema = new mongoose.Schema(
          type: String,
          default: "",
       },
-      followers: {
-         type: [{type: mongoose.Schema.ObjectId, ref: "User"}],
-         default: [],
-      },
-      followings: {
-         type: [{type: mongoose.Schema.ObjectId, ref: "User"}],
-         default: [],
-      },
+      followers: [{
+         type: mongoose.Schema.Types.ObjectId,
+         ref: "User"
+      }],
+      followings: [{
+         type: mongoose.Schema.Types.ObjectId,
+         ref: "User"
+      }],
       isAdmin: {
          type: Boolean,
          default: false,

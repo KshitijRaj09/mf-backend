@@ -5,7 +5,7 @@ const {filterDeletedUser} = require("../util");
 const followUser = async (req, res) => {
    const currentUserId = req.userid;
    const userId = req.params.userid;
-
+   
    if (currentUserId !== userId) {
       try {
          const user = await User.findById(userId);

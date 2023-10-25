@@ -63,6 +63,7 @@ const loginUser = async (req, res) => {
          email: user.email,
          userid: user._id,
          isAdmin: user.isAdmin,
+         avatar: user.avatar,
       };
       const token = jwt.sign(userDetails, process.env.JWT_SECRET_KEY, {
          expiresIn: process.env.JWT_TOKEN_EXPIRES_IN,
@@ -75,7 +76,18 @@ const loginUser = async (req, res) => {
    }
 };
 
+const deleteManyUser = async (req, res) => {
+   try {
+      const result = await User.deleteMany({ _id: { $ne: "6448c6fb0fc71e7fcb89251a" } });
+      res.status(200).json(result);
+   }
+   catch (error) {
+      res.status(500).json(error);
+   }
+}
+
 module.exports = {
    registerUser,
    loginUser,
+   deleteManyUser
 };
