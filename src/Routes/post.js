@@ -15,7 +15,7 @@ const router = Router();
 router.post("/createPost", verifyAuthToken, createPost);
 router.put("/:id", verifyAuthToken, updatePost);
 router.delete("/:id", verifyAuthToken, deletePost);
-router.put("/:id/like", verifyAuthToken, likeDislikePost);
+router.put("/like/:postid", verifyAuthToken, likeDislikePost);
 router.get("/:id", verifyAuthToken, getPost);
 router.get("/timeline/all", verifyAuthToken, getTimeLinePost);
 

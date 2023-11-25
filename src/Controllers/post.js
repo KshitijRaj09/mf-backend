@@ -48,7 +48,7 @@ const deletePost = async (req, res) => {
 //like / dislike a post
 const likeDislikePost = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
+    const post = await Post.findById(req.params.postid);
     if (!post.likes.includes(req.userid)) {
       await post.updateOne({$push: {likes: req.userid}});
       res.status(200).json("The post has been liked");
@@ -75,7 +75,10 @@ const getPost = async (req, res) => {
 const getTimeLinePost = async (req, res) => {
   try {
     //const currentUser = await User.findById(req.userid).select('name username avatar _id');
-    const currentUserWithFollowings = await User.find({ $or: [{ followers: req.userid }, { _id: req.userid }] });
+    const currentUserWithFollowings = await User.find({
+      $or: [{ followers: req.userid },
+      { _id: req.userid }]
+    });
 
     let posts = await Post.find({ userId: { $in: currentUserWithFollowings } }).populate({
       path: 'userId',
