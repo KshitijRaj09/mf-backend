@@ -9,11 +9,13 @@ const connectSocketIo = (server, allowedOrigin,onlineUsers) => {
    );
    io.on("connection", (socket) => {
       console.log('connected to socket.io', socket.id);
-      let userId;
+      let userId='';
       socket.on('addOnlineUser', ({ socketId, userId: userid }) => {
-         onlineUsers[userid] = socketId;
+         console.log('here addonlineuser', userid, socketId);
+         onlineUsers = { [userid]: [], ...onlineUsers };
+         onlineUsers[userid].push(socketId);
          userId = userid
-         console.log('onlineuser', onlineUsers)
+         console.log('after push new socket id onlineuser', onlineUsers);
       });
 
       //one-one chat
@@ -26,9 +28,11 @@ const connectSocketIo = (server, allowedOrigin,onlineUsers) => {
 
       socket.on('send-message', (message) => {
          console.log('chatId', chatId)
-         const notification = {isRead: false, ...message}
-         io.to(onlineUsers[message.receiverId]).emit('message-from-server', (message));
-         io.to(onlineUsers[message.receiverId]).emit('send-notification', notification);
+         const notification = { isRead: false, type: 'message', ...message };
+         console.log(onlineUsers[message.receiverId]);
+         socket.to(chatId).emit('message-from-server', (message));
+         onlineUsers[message.receiverId].forEach((socketId) => 
+         io.to(socketId).emit('message-notification', notification))   
       });
 
       socket.on("start-typing-from-client", () => {
@@ -40,10 +44,13 @@ const connectSocketIo = (server, allowedOrigin,onlineUsers) => {
       })
       
       socket.on("disconnect", (reason) => {
-         //console.log('A user disconnected', reason, onlineUsers, socket.id, socket.connected)
-         delete onlineUsers[userId];
-         console.log('online user after disconnect', onlineUsers);
-         
+         console.log('A user disconnected', reason, onlineUsers, socket.id, socket.connected)
+         onlineUsers[userId] = onlineUsers[userId].filter(socketId => socketId !== socket.id);
+         if (!onlineUsers[userId].length) {
+            delete onlineUsers[userId];
+         }
+         userId = '';
+         console.log('online user after disconnect', onlineUsers, userId);    
       })
    })
 }
