@@ -31,7 +31,7 @@ const connectSocketIo = (server, allowedOrigin,onlineUsers) => {
          const notification = { isRead: false, type: 'message', ...message };
          console.log(onlineUsers[message.receiverId]);
          socket.to(chatId).emit('message-from-server', (message));
-         onlineUsers[message.receiverId].forEach((socketId) => 
+         onlineUsers?.[message.receiverId]?.forEach((socketId) => 
          io.to(socketId).emit('message-notification', notification))   
       });
 
