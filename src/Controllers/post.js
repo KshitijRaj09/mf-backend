@@ -74,7 +74,6 @@ const getPost = async (req, res) => {
 //get timeline posts
 const getTimeLinePost = async (req, res) => {
   try {
-    //const currentUser = await User.findById(req.userid).select('name username avatar _id');
     const currentUserWithFollowings = await User.find({
       $or: [{ followers: req.userid },
       { _id: req.userid }]
@@ -94,18 +93,6 @@ const getTimeLinePost = async (req, res) => {
         userId: _id
       }
     })
-
-    // const userPosts = await Post.find({userId: req.userid}).sort({
-    //    createdAt: -1,
-    // });
-    // const friendPosts = await Promise.all(
-    //    currentUser.followings.map((friendId) => {
-    //       return Post.find({userId: friendId}).sort({
-    //          createdAt: -1,
-    //       });
-    //    })
-    // );
-    //res.status(200).json(userPosts.concat(...friendPosts));
     res.status(200).json(posts)
     
  } catch (err) {
