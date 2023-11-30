@@ -55,7 +55,6 @@ const updateUser = async (req, res) => {
 
 //delete an user
 const deleteUser = async (req, res) => {
-  console.log(req.isAdmin);
   if (req.body.userId === req.params.userid || req.isAdmin) {
     try {
       await User.findByIdAndDelete(req.params.userid);
@@ -106,7 +105,6 @@ const getAllUserList = async (req, res) => {
 
 //Get by User by search
 const getUserBySearch = async (req, res) => {
-  console.log(req.query);
   const keyword = req.query.search;
   if (!keyword) {
     res.status(200).json([]);
@@ -115,8 +113,7 @@ const getUserBySearch = async (req, res) => {
     const userList = await User.find({
       $or: [{ name: { $regex: keyword, $options: 'i' } },
       { username: { $regex: keyword, $options: 'i' } }]
-    }).where('_id').ne(req.userid).select('username name avatar profilePicture _id')
-    console.log(userList);
+    }).where('_id').ne(req.userid).select('username name avatar profilePicture _id');
     return res.status(200).json(userList);
   }
   catch (error) {

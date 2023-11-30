@@ -4,6 +4,7 @@ const followUserRouter = require("./follow");
 const postRouter = require("./post");
 const chatRouter = require("./chat");
 const messageRouter = require("./message");
+const notificationRouter = require("./notification");
 
 module.exports = {
    userRouters,
@@ -11,5 +12,6 @@ module.exports = {
    followUserRouter,
    postRouter,
    chatRouter,
-   messageRouter
+   messageRouter,
+   notificationRouter
 };

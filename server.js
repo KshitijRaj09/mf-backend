@@ -61,7 +61,8 @@ app.use("/follow", router.followUserRouter);
 app.use("/post", router.postRouter);
 app.use("/user", router.userRouters);
 app.use("/chat", router.chatRouter);
-app.use("/message", router.messageRouter)
+app.use("/message", router.messageRouter);
+app.use("/notification", router.notificationRouter);
 app.use("*", (req, res) => {
   res.status(404).sendFile(__dirname + '/public/NotFoundPage.html');
 })
